@@ -114,6 +114,6 @@ By configuring the log above, only log messages tagged with :phase1 and :phase2 
 
 By limiting the log messages, it may be more difficult some times to spot the issue since the log messages that point out the error has already been filtered from the log file. It is definitely possible that this is happening since not all log messages shall be available if it is filtered. Therefore it is up to the developer if that is a disadvantages or advantages under their specific use case. Also it is up to developer to tag the log messages which can be anything under the sun. It may be only two tags, one for internal usage one for external. Hence it is really up to the use case that makes the scenario possible or otherwise.
 
-To me I can now even in production system, hide some log messages under info log level and reveal it if necessary. Since it is part of the code, the tag to hide or show can be configured via a configuration files. No compilation needed and the debug messages can be as extensive as possible since you know that is a way to filter that.  
+To me I can now even in production system, hide some log messages under info log level and reveal it if necessary. Since it is part of the code, the tag to hide or show can be configured via a configuration files. No changing of code needed and the debug messages can be as extensive as possible since you know that there is a way to filter after that.  
 
 
