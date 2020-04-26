@@ -1,6 +1,7 @@
 require "tlogger/version"
-require "tlogger/tlogger"
-require "tlogger/logger_group"
+
+require_relative "tlogger/tlogger"
+require_relative "tlogger/logger_group"
 
 # 
 # :nodoc:

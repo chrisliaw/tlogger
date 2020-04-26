@@ -268,6 +268,14 @@ module Tlogger
       end
     end
 
+    #
+    # :method: show_source
+    # Helper setting the flag include_caller
+    #
+    def show_source 
+      @include_caller = true
+    end
+
     private
     def format_message(key)
       # returning args array
