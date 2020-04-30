@@ -87,11 +87,11 @@ module Tlogger
     # Delegate unknown method to the underlying logger
     def method_missing(mtd,*args,&block)
 
-      hit = false
+      #hit = false
       @loggers.each do |k,v|
         begin
           v.send(mtd,*args,&block)
-          hit = true
+          #hit = true
         rescue Exception => ex
           STDERR.puts ex.message
         end
