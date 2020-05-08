@@ -122,6 +122,30 @@ class TloggerTest < Minitest::Test
      
   end
 
+  def test_api_override
+    
+    buf = StringIO.new
+    log = Tlogger::Tlogger.new(buf)
+
+    log.debug :new_tag, "Debug on new tag"
+    log.error :new_tag, "Error on new tag"
+    log.info :new_tag, "Info on new tag"
+    log.warn :new_tag, "Warn on new tag"
+
+    buf.rewind
+    dat = buf.read
+
+    assert(dat.lines.length == 4)
+
+    etest(dat.lines[-4],:debug, :new_tag, "Debug on new tag")
+    etest(dat.lines[-3],:error, :new_tag, "Error on new tag")
+    etest(dat.lines[-2],:info, :new_tag, "Info on new tag")
+    etest(dat.lines[-1],:warn, :new_tag, "Warn on new tag")
+
+    log.close
+
+  end
+
 
   private
   def etest(ln, type, tag, msg)

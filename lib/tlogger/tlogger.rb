@@ -5,7 +5,7 @@ require 'openssl'
 module Tlogger
 
   ##
-  # Tlogger class is meant to be a thin wrapper around the Ruby Logger class to provide contextual logging capabilities to the logging system.
+  # Tlogger class is meant to be a thin wrapper around the Ruby Logger class (by default) to provide contextual logging capabilities to the logging system.
   #
   # Contextual logging allow developers:
   # * Structure the log message not only by the severity (debug, info, error, warning) but also another key that is useful for the application
@@ -37,16 +37,24 @@ module Tlogger
     # +logger+ it is the actual logger instance of this Tlogger
     attr_reader :logger
 
-    def initialize(*args,&block)
+    def initialize(*args , &block)
       # default to console
       if args.length == 0
         args << STDOUT
       end
 
-      @logger = Logger.new(*args,&block)
+      @opts = {}
+      if args[-1].is_a?(Hash)
+        @opts = opts
+        @opts = { } if @opts.nil?
+        args = args[0..-2]
+      end
+
+      @logger = @opts[:logger_instance] || Logger.new(*args,&block)
       @disabled = []
       @dHistory = {}
       @include_caller = false
+      @tag = nil
 
       @genable = true
       @exception = []
@@ -180,20 +188,26 @@ module Tlogger
     #
     def method_missing(mtd, *args, &block)
       if [:debug, :error, :info, :warn].include?(mtd)
-       
+      
+        if args.length > 0 and args[0].is_a?(Symbol)
+          tag = args[0]
+          args = args[1..-1]
+        else
+          tag = @tag
+        end 
         
-        if is_genabled?(@tag) and not tag_disabled?(@tag) 
+        if is_genabled?(tag) and not tag_disabled?(tag) 
 
           if block
-            if not (@tag.nil? or @tag.empty?) and args.length == 0 
-              args = [ format_message(@tag) ]
+            if not (tag.nil? or tag.empty?) and args.length == 0 
+              args = [ format_message(tag) ]
             end
 
             out = block
           else
-            if not (@tag.nil? or @tag.empty?)
+            if not (tag.nil? or tag.empty?)
               str = args[0]
-              args = [ format_message(@tag) ]
+              args = [ format_message(tag) ]
               out = Proc.new { str }
             else
               out = block
